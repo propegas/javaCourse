@@ -12,28 +12,31 @@ public class BookManager {
     public static final int ADD_BOOK_MENU_INDEX = 1;
     public static final int SEARCH_BOOK_MENU_INDEX = 2;
     static int totalBooks;
-    static int currentMenu;
+    static int previousMenu = 0;
+    Menu currentMenu;
     ArrayList<Books> books;
-    Menu[] menus;
+    Menu menu;
 
     public BookManager() {
         this.books = new ArrayList<>();
-        this.menus = new Menu[3];
-        menus[MAIN_MENU_INDEX] = new Menu(MAIN_MENU_INDEX);
-        menus[ADD_BOOK_MENU_INDEX] = new Menu(ADD_BOOK_MENU_INDEX);
-        menus[SEARCH_BOOK_MENU_INDEX] = new Menu(SEARCH_BOOK_MENU_INDEX);
+        this.menu = new Menu();
+        this.currentMenu = menu;
+        Menu mainMenu = new Menu(MAIN_MENU_INDEX);
+/*        menus[MAIN_MENU_INDEX] = mainMenu;
+        menus[ADD_BOOK_MENU_INDEX] = new Menu(ADD_BOOK_MENU_INDEX, mainMenu);
+        menus[SEARCH_BOOK_MENU_INDEX] = new Menu(SEARCH_BOOK_MENU_INDEX, mainMenu);*/
     }
 
-    public void showMenu(int type) {
-        Menu mainMenu = menus[type];
+    public void showMenu() {
+        Menu mainMenu = currentMenu;
         mainMenu.showMenu();
-        currentMenu = type;
     }
 
-    public int getUserChoice() {
+    public String getUserChoice() {
         System.out.println("Введите номер пунка меню:");
         Scanner scanner = new Scanner(System.in);
         int userChoice = scanner.nextInt();
-        return userChoice;
+        currentMenu.showMenu();
+        return "";
     }
 }

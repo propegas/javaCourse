@@ -10,6 +10,7 @@ public class Menu {
     String menuTitle;
     String menuFooter;
     ArrayList<MenuElement> menuElements;
+    Menu previousMenu;
 
     public Menu() {
         this.menuElements = new ArrayList<>();
@@ -21,38 +22,55 @@ public class Menu {
             case BookManager.MAIN_MENU_INDEX:
                 createMainMenu();
                 break;
-            case BookManager.ADD_BOOK_MENU_INDEX:
+           /* case BookManager.ADD_BOOK_MENU_INDEX:
                 createAddBookMenu();
                 break;
             case BookManager.SEARCH_BOOK_MENU_INDEX:
                 createSearchBookMenu();
-                break;
+                break;*/
             default:
                 System.out.println("Неверный номер меню!");
         }
     }
 
+    public Menu(int addBookMenuIndex, Menu previousMenu) {
+        this(addBookMenuIndex);
+        this.previousMenu = previousMenu;
+    }
+
     private void createAddBookMenu() {
         this.menuTitle = "Вы находитесь в меню добавления новой книги.";
-        addDefaultElement();
+        addDefaultElement(this);
     }
 
-    private void addDefaultElement() {
-        this.menuElements.add(new MenuElement(0, "Выйти в главное меню"));
+    private void addDefaultElement(Menu menu) {
+        this.menuElements.add(new MenuElement(0, "Выйти в предыдущее меню", menu));
     }
 
-    private void createSearchBookMenu() {
+   /* private void createSearchBookMenu() {
         this.menuTitle = "Вы находитесь в меню поиска книги.";
-        this.menuElements.add(new MenuElement(1, "Найти по номеру (id)"));
-        this.menuElements.add(new MenuElement(2, "Найти по названию"));
-        addDefaultElement();
-    }
+        this.menuElements.add(new MenuElement(1, "Найти по номеру (id)", menuAddBook));
+        this.menuElements.add(new MenuElement(2, "Найти по названию", menuAddBook));
+        addDefaultElement(this);
+    }*/
 
     private void createMainMenu() {
         this.menuTitle = "Вы находитесь в главном меню.";
-        this.menuElements.add(new MenuElement(1, "Добавить книгу"));
-        this.menuElements.add(new MenuElement(2, "Найти книгу"));
-        addDefaultElement();
+
+        Menu menuSearchBook = new Menu();
+        menuSearchBook.menuTitle ="Вы находитесь в меню поиска книги.";
+        menuSearchBook.previousMenu = this;
+        menuSearchBook.menuElements.add(new MenuElement(1, "Найти по номеру (id)", null));
+        menuSearchBook.menuElements.add(new MenuElement(2, "Найти по названию", null));
+        menuSearchBook.addDefaultElement(this);
+
+        Menu menuAddBook = new Menu();
+        menuAddBook.menuTitle ="Вы находитесь в меню добавления новой книги.";
+        menuAddBook.previousMenu = this;
+        menuAddBook.addDefaultElement(this);
+
+        this.menuElements.add(new MenuElement(1, "Добавить книгу", menuAddBook));
+        this.menuElements.add(new MenuElement(2, "Найти книгу", menuSearchBook));
     }
 
     public void showMenu() {

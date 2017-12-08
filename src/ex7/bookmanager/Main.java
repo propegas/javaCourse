@@ -11,9 +11,12 @@ public class Main {
 
     private static void start() {
         BookManager bookManager = new BookManager();
-        bookManager.showMenu(BookManager.MAIN_MENU_INDEX);
+        Menu mainMenu = new Menu(BookManager.MAIN_MENU_INDEX);
+        bookManager.menu = mainMenu;
+        bookManager.currentMenu = mainMenu;
+        bookManager.showMenu();
         do {
-            int userChoice = bookManager.getUserChoice();
+            String userChoice = bookManager.getUserChoice();
         } while (true);
     }
 }
