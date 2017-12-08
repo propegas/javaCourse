@@ -29,8 +29,15 @@ public class Main {
         cat1.eat(35);
         cat3.eat(45);
 
+        System.out.println();
         // eat from classes :)
         Bowl bowl = new Bowl(100);
+        Plate plate = new Plate(300);
+
+        cat1.drinkFromBowl(bowl, 11);
+        cat2.eatFromPlate(plate, 114);
+        cat3.eatFromPlate(plate, 55);
+        cat2.drinkFromBowl(bowl, 19);
 
     }
 

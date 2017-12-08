@@ -9,8 +9,6 @@ public class Cat {
     static int plate;
     static int bowl;
     int id;
-    Bowl bowlFromClass;
-    Plate plateFromClass;
 
     public Cat() {
         count++;
@@ -43,5 +41,17 @@ public class Cat {
 
     public void showId() {
         System.out.println(id);
+    }
+
+    public void drinkFromBowl(Bowl bowl, int amount) {
+        bowl.drink(amount);
+        System.out.printf("Кошка %d выпила %d воды из мега-миски%n", id, amount);
+        System.out.printf("В мега-миске осталось %d еды %n", bowl.getAmount());
+    }
+
+    public void eatFromPlate(Plate plate, int amount) {
+        plate.eat(amount);
+        System.out.printf("Кошка %d съела %d воды из мега-тарелки%n", id, amount);
+        System.out.printf("В мега-тарелке осталось %d еды %n", plate.getAmount());
     }
 }

@@ -10,4 +10,13 @@ public class Bowl {
     public Bowl(int amount) {
         this.amount = amount;
     }
+
+    public void drink(int amount) {
+        this.amount -= amount;
+
+    }
+
+    public int getAmount() {
+        return amount;
+    }
 }
