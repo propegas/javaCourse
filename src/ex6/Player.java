@@ -7,8 +7,12 @@ import java.util.Scanner;
  * Package: ex6.
  */
 public class Player {
-    int betAmount;
-    int horseNum;
+    private int betAmount;
+    private int horseNum;
+
+    public Player() {
+        //default
+    }
 
     public void setBetFromScreen() {
         Scanner scanner = new Scanner(System.in);
@@ -17,5 +21,13 @@ public class Player {
         scanner.nextLine();
         System.out.println("Размер ставки ($):");
         this.betAmount = scanner.nextInt();
+    }
+
+    public float getPrize(Horse winnerHorse) {
+        return (float) (this.betAmount * winnerHorse.getBetRate());
+    }
+
+    public int getHorseNum() {
+        return horseNum;
     }
 }

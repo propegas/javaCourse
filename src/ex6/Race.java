@@ -6,48 +6,39 @@ package ex6;
  */
 public class Race {
 
-    int totalDistance;
-    Player player;
+    public static final int HORSES_IN_RACE = 10;
+    public static final int TOTAL_RACE_DISTANCE = 200;
 
-    Horse[] horses;
-    Horse[] horsesSortedByTotalDistance;
+    private int totalDistance;
+    private Horse[] horses;
+    private Horse[] horsesSortedByTotalDistance;
 
-    public Race(int totalRaceDistance) {
-        this.totalDistance = totalRaceDistance;
+    public Race() {
+        this.totalDistance = TOTAL_RACE_DISTANCE;
+        initHorses();
     }
 
-    public void addHorses(Horse[] horses, Horse[] horsesSortedByTotalDistance) {
-        this.horses = horses;
-        this.horsesSortedByTotalDistance = horsesSortedByTotalDistance;
-    }
-
-    public void initHorses(int horsesInRace) {
-        Horse[] horses = new Horse[horsesInRace];
-        Horse[] horsesSortedByTotalDistance = new Horse[horsesInRace];
-        for (int i = 0; i < horsesInRace; i++) {
-            Horse horse = new Horse(true, i + 1);
-            horses[i] = horse;
-            horsesSortedByTotalDistance[i] = horse;
+    public void initHorses() {
+        this.horses = new Horse[HORSES_IN_RACE];
+        this.horsesSortedByTotalDistance = new Horse[HORSES_IN_RACE];
+        for (int i = 0; i < HORSES_IN_RACE; i++) {
+            Horse horse = new Horse(i + 1);
+            this.horses[i] = horse;
+            this.horsesSortedByTotalDistance[i] = horse;
         }
-        addHorses(horses, horsesSortedByTotalDistance);
     }
 
     public void showHorses() {
-        for (int i = 0; i < horses.length; i++) {
-            Horse horse = horses[i];
-            System.out.println("Лошадь № " + horse.num);
+        for (int i = 0; i < this.horses.length; i++) {
+            System.out.println(this.horses[i]);
         }
-    }
-
-    public void addPlayer(Player player) {
-        this.player = player;
     }
 
     public void start() {
         System.out.println("Гонка началась!");
         do {
             raceLoop();
-        } while (horsesSortedByTotalDistance[0].totalDistancePassed < totalDistance);
+        } while (this.horsesSortedByTotalDistance[0].getTotalDistancePassed() < this.totalDistance);
 
         finish();
     }
@@ -58,46 +49,40 @@ public class Race {
     }
 
     private void showResult() {
-        System.out.println("Победила лошадь %" + horsesSortedByTotalDistance[0].num);
-        for (int i = 0; i < horsesSortedByTotalDistance.length; i++) {
-            Horse horse = horsesSortedByTotalDistance[i];
-            System.out.printf("%d место:\t Лошадь № %d%n", i + 1, horse.num);
+        Horse[] sortedHorses = this.horsesSortedByTotalDistance;
+        System.out.println("Победила лошадь " + sortedHorses[0]);
+        for (int i = 0; i < sortedHorses.length; i++) {
+            Horse horse = sortedHorses[i];
+            System.out.printf("%d место: \t%s%n", i + 1, horse);
         }
     }
 
     private void raceLoop() {
-        for (int i = 0; i < horses.length; i++) {
-            horses[i].move();
+        System.out.println();
+        for (int i = 0; i < this.horses.length; i++) {
+            this.horses[i].move();
+            showHorseIntermediateResult(this.horses[i]);
         }
-        printIntermediateResult();
         sortHorsesByDistance();
     }
 
-    private void printIntermediateResult() {
-        System.out.println();
-        for (int i = 0; i < horses.length; i++) {
-            Horse horse = horses[i];
-            System.out.printf("Лошадь № %d\t прошла %d\t метров%n", horse.num, horse.lastIterationDistancePassed);
-        }
+    private void showHorseIntermediateResult(Horse horse) {
+        System.out.printf("%s \tпрошла \t%d \tметров%n", horse, horse.getLastIterationDistancePassed());
     }
 
     void sortHorsesByDistance() {
-        for (int i = 0; i < horses.length; i++) {
-            for (int j = i + 1; j < horses.length; j++) {
-                if (horsesSortedByTotalDistance[i].totalDistancePassed <= horsesSortedByTotalDistance[j].totalDistancePassed) {
-                    Horse tmp = horsesSortedByTotalDistance[j];
-                    horsesSortedByTotalDistance[j] = horsesSortedByTotalDistance[i];
-                    horsesSortedByTotalDistance[i] = tmp;
+        for (int i = 0; i < this.horses.length; i++) {
+            for (int j = i + 1; j < this.horses.length; j++) {
+                if (this.horsesSortedByTotalDistance[i].getTotalDistancePassed() <= this.horsesSortedByTotalDistance[j].getTotalDistancePassed()) {
+                    Horse tmp = this.horsesSortedByTotalDistance[j];
+                    this.horsesSortedByTotalDistance[j] = this.horsesSortedByTotalDistance[i];
+                    this.horsesSortedByTotalDistance[i] = tmp;
                 }
             }
         }
     }
 
-    public void showPlayerResult() {
-        if (player.horseNum == horsesSortedByTotalDistance[0].num) {
-            System.out.println("Поздравляем! Ваша ставка выиграла!");
-        } else {
-            System.out.println("К сожалению, вы проиграли.");
-        }
+    public Horse getWinner() {
+        return this.horsesSortedByTotalDistance[0];
     }
 }
