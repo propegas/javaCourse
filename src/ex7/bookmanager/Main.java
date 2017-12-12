@@ -13,7 +13,6 @@ public class Main {
         BookManager bookManager = new BookManager();
         Menu mainMenu = new Menu(3);
         bookManager.createMainMenu(mainMenu);
-        bookManager.menu = mainMenu;
         bookManager.currentMenu = mainMenu;
 
         do {

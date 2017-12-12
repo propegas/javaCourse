@@ -12,13 +12,19 @@ public class BookManager {
     public static final int DELETE_BOOK_MENU_INDEX = 1;
     public static final int SEARCH_BOOK_MENU_INDEX = 2;
     static int totalBooks;
-    Menu previousMenu;
     Menu currentMenu;
     ArrayList<Book> books;
-    Menu menu;
 
     public BookManager() {
         this.books = new ArrayList<>();
+    }
+
+    private static void decreaseTotal() {
+        totalBooks--;
+    }
+
+    private static void increaseTotal() {
+        totalBooks++;
     }
 
     public void showMenu() {
@@ -34,7 +40,6 @@ public class BookManager {
         Menu selectedMenu = currentMenu.menuElements[(userChoice)].menu;
         if (selectedMenu != null) {
             this.currentMenu = selectedMenu;
-            previousMenu = this.currentMenu;
         } else {
             System.out.println();
 
@@ -48,6 +53,8 @@ public class BookManager {
                 case DELETE_BOOK_MENU_INDEX:
                     prepareDeleteBook(currentMenu.menuElements[(userChoice)]);
                     break;
+                default:
+
             }
         }
 
@@ -63,7 +70,7 @@ public class BookManager {
         }
 
         if (findBook != null) {
-            System.out.printf("Автор: %s %nНазвание: %s%n%n", findBook.author, findBook.title);
+            System.out.printf("Автор: %s %nНазвание: %s%n%n", findBook.getAuthor(), findBook.getTitle());
             removeBookFromManager(findBook);
             System.out.println(menuElement.result);
         } else {
@@ -73,7 +80,7 @@ public class BookManager {
 
     private void removeBookFromManager(Book findBook) {
         books.remove(findBook);
-        totalBooks--;
+        decreaseTotal();
     }
 
     private void prepareSearchBook(MenuElement menuElement) {
@@ -86,7 +93,7 @@ public class BookManager {
 
         if (findBook != null) {
             System.out.println(menuElement.result);
-            System.out.printf("Автор: %s %nНазвание: %s%n%n", findBook.author, findBook.title);
+            System.out.printf("Автор: %s %nНазвание: %s%n%n", findBook.getAuthor(), findBook.getTitle());
         } else {
             System.out.println("Книга не найдена.");
         }
@@ -108,7 +115,7 @@ public class BookManager {
 
     private Book findBookByTitle(String bookTitleToSearch) {
         for (Book book : books) {
-            if (book.title.toLowerCase().equals(bookTitleToSearch.toLowerCase())) {
+            if (book.getTitle().toLowerCase().equals(bookTitleToSearch.toLowerCase())) {
                 return book;
             }
         }
@@ -116,13 +123,13 @@ public class BookManager {
     }
 
     private String getBookTitleToSearchFromUser() {
-        String title = getStringFromUser("Веедите название книги:");
+        String title = getStringFromUser("Введите название книги:");
         return title;
     }
 
     private Book findBookById(String bookIdToSearch) {
         for (Book book : books) {
-            if (book.id.toLowerCase().equals(bookIdToSearch.toLowerCase())) {
+            if (bookIdToSearch.toLowerCase().equals(book.getId().toLowerCase())) {
                 return book;
             }
         }
@@ -146,7 +153,7 @@ public class BookManager {
 
     private void addBookToManager(Book bookInfoFromUser) {
         books.add(bookInfoFromUser);
-        totalBooks++;
+        increaseTotal();
     }
 
     private Book getBookInfoFromUser() {
@@ -171,7 +178,6 @@ public class BookManager {
         Menu menuSearchBook = new Menu(3);
         menuSearchBook.menuType = SEARCH_BOOK_MENU_INDEX;
         menuSearchBook.menuTitle = "Вы находитесь в меню поиска книги.";
-        menuSearchBook.previousMenu = mainMenu;
         menuSearchBook.menuElements[1] = (new MenuElement(1, "Найти по номеру (id)", null, "Книга найдена."));
         menuSearchBook.menuElements[2] = new MenuElement(2, "Найти по названию", null, "Книга найдена.");
         menuSearchBook.addDefaultElement(mainMenu);
@@ -179,14 +185,12 @@ public class BookManager {
         Menu menuDeleteBook = new Menu(3);
         menuDeleteBook.menuType = DELETE_BOOK_MENU_INDEX;
         menuDeleteBook.menuTitle = "Вы находитесь в меню удаления книги.";
-        menuDeleteBook.previousMenu = mainMenu;
         menuDeleteBook.menuElements[1] = (new MenuElement(1, "Удалить книгу по номеру (id)", null, "Книга удалена."));
         menuDeleteBook.menuElements[2] = new MenuElement(2, "Удалить книгу по названию", null, "Книга удалена.");
         menuDeleteBook.addDefaultElement(mainMenu);
 
         Menu menuAddBook = new Menu(1);
         menuAddBook.menuTitle = "Вы находитесь в меню добавления новой книги. ";
-        menuAddBook.previousMenu = mainMenu;
         menuAddBook.addDefaultElement(mainMenu);
 
         mainMenu.menuElements[0] = new MenuElement(0, "Добавить книгу", null,

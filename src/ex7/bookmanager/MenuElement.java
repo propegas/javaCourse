@@ -10,6 +10,10 @@ public class MenuElement {
     String result;
     Menu menu;
 
+    public MenuElement() {
+        //default
+    }
+
     public MenuElement(int menuElementId, String menuElementTitle, Menu menu, String result) {
         this.id = menuElementId;
         this.title = menuElementTitle;
