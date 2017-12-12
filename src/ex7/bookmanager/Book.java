@@ -9,8 +9,12 @@ public class Book extends Thing {
     private String title;
     private String author;
 
-    public Book(String bookId, String bookAuthor, String bookTitle) {
-        super.setId(bookId);
+    public Book() {
+        //default
+    }
+
+    public Book(String bookAuthor, String bookTitle) {
+        //super.setId(bookId);
         author = bookAuthor;
         title = bookTitle;
     }
@@ -29,5 +33,31 @@ public class Book extends Thing {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    @Override
+    public String toString() {
+        return "[" + super.getId() + "] " + "Книга {" +
+                "'" + title + '\'' +
+                ", " + author +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Book book = (Book) o;
+
+        if (!title.equals(book.title)) return false;
+        return author.equals(book.author);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = title.hashCode();
+        result = 31 * result + author.hashCode();
+        return result;
     }
 }

@@ -5,13 +5,27 @@ package ex7.bookmanager;
  * Package: ex7.bookmanager.
  */
 public class Thing {
-    private String id;
+    private int id;
+    private static int lastId;
 
-    public String getId() {
+    public Thing() {
+        increaseLastId();
+        this.id = lastId;
+    }
+
+    private static void increaseLastId() {
+        lastId++;
+    }
+
+    public static int getLastId() {
+        return lastId;
+    }
+
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }

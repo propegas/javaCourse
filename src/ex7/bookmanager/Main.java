@@ -10,7 +10,7 @@ public class Main {
     }
 
     private static void start() {
-        BookManager bookManager = new BookManager();
+        ThingManager bookManager = new ThingManager();
         Menu mainMenu = new Menu(3);
         bookManager.createMainMenu(mainMenu);
         bookManager.currentMenu = mainMenu;
