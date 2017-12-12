@@ -47,9 +47,7 @@ public class SeaBattle {
             return true;
         if (isColumnFull(table, winLines))
             return true;
-        if (isDiagFull(table, winLines))
-            return true;
-        return false;
+        return isDiagFull(table, winLines);
     }
 
     private static boolean isDiagFull(char[][] table, String[] winLines) {

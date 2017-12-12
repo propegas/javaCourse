@@ -31,14 +31,6 @@ public class Cat {
         System.out.printf("В миске осталось %d еды %n", bowl);
     }
 
-    public int showPlate() {
-        return plate;
-    }
-
-    public int showBowl() {
-        return bowl;
-    }
-
     public void showId() {
         System.out.println(id);
     }

@@ -8,7 +8,6 @@ public class Menu {
     String menuTitle;
     int menuType;
     MenuElement[] menuElements;
-    Menu previousMenu;
 
     public Menu(int size) {
         this.menuElements = new MenuElement[size];
