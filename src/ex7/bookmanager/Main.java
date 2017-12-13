@@ -10,14 +10,14 @@ public class Main {
     }
 
     private static void start() {
-        ThingManager bookManager = new ThingManager();
-        Menu mainMenu = new Menu(3);
-        bookManager.createMainMenu(mainMenu);
-        bookManager.currentMenu = mainMenu;
+        ThingManager thingManager = new ThingManager();
+        Menu mainMenu = new Menu(4);
+        thingManager.createMainMenu(mainMenu);
+        thingManager.setCurrentMenu(mainMenu);
 
         do {
-            bookManager.showMenu();
-            bookManager.getUserChoice();
+            thingManager.showMenu();
+            thingManager.getUserChoice();
         } while (true);
     }
 

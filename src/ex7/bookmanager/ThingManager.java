@@ -9,32 +9,32 @@ import java.util.Scanner;
  * Package: ex7.bookmanager.
  */
 public class ThingManager {
-    public static final int MAIN_BOOK_MENU_INDEX = 0;
-    public static final int MAIN_MENU_INDEX = 1;
-    public static final int DELETE_BOOK_MENU_INDEX = 2;
-    public static final int BOOK_ADD_MENU_ELEMENT_ID = 1;
-    public static final int SEARCH_BOOK_MENU_INDEX = 3;
-    public static final int DELETE_ALL_MENU_ELEMENT_ID = 2;
-    public static final int SHOW_ALL_MENU_ELEMENT_ID = 0;
-    static int totalThings;
-    private final MenuBuilder MenuBuilder = new MenuBuilder();
-    Menu currentMenu;
-    ArrayList<Thing> things;
+
+    private static int totalThings;
+    private static MenuBuilder menuBuilder = new MenuBuilder();
+    private static ArrayList<Thing> things = new ArrayList<>();
+    private BookManager bookManager = BookManager.getInstance();
+    private MagnetManager magnetManager = MagnetManager.getInstance();
+    private Menu currentMenu;
 
     public ThingManager() {
-        this.things = new ArrayList<>();
+//        this.things = new ArrayList<>();
     }
 
     private static void decreaseTotal() {
         totalThings--;
     }
 
-    private static void increaseTotal() {
+    public static void increaseTotal() {
         totalThings++;
     }
 
+    public ArrayList<Thing> getThings() {
+        return things;
+    }
+
     public void showMenu() {
-        Menu mainMenu = currentMenu;
+        Menu mainMenu = getCurrentMenu();
         mainMenu.showMenu();
     }
 
@@ -43,24 +43,27 @@ public class ThingManager {
         System.out.println("Введите номер пунка меню:");
         Scanner scanner = new Scanner(System.in);
         int userChoice = scanner.nextInt();
-        Menu selectedMenu = currentMenu.menuElements[(userChoice)].menu;
+        Menu selectedMenu = getCurrentMenu().getMenuElements()[(userChoice)].getMenu();
         if (selectedMenu != null) {
-            this.currentMenu = selectedMenu;
+            this.setCurrentMenu(selectedMenu);
         } else {
             System.out.println();
 
-            switch (currentMenu.menuType) {
-                case MAIN_MENU_INDEX:
-                    prepareManageThings(currentMenu.menuElements[(userChoice)]);
+            switch (getCurrentMenu().getMenuType()) {
+                case MenuBuilder.MAIN_MENU_INDEX:
+                    prepareManageThings(getCurrentMenu().getMenuElements()[userChoice]);
                     break;
-                case MAIN_BOOK_MENU_INDEX:
-                    prepareManageBook(currentMenu.menuElements[(userChoice)]);
+                case MenuBuilder.MAIN_BOOK_MENU_INDEX:
+                    bookManager.prepareManageBook(getCurrentMenu().getMenuElements()[userChoice]);
                     break;
-                case SEARCH_BOOK_MENU_INDEX:
-                    prepareSearchBook(currentMenu.menuElements[(userChoice)]);
+                case MenuBuilder.MAIN_MAGNET_MENU_INDEX:
+                    magnetManager.prepareManageMagnet(getCurrentMenu().getMenuElements()[userChoice]);
                     break;
-                case DELETE_BOOK_MENU_INDEX:
-                    prepareDeleteBook(currentMenu.menuElements[(userChoice)]);
+                case MenuBuilder.SEARCH_BOOK_MENU_INDEX:
+                    bookManager.prepareSearchBook(getCurrentMenu().getMenuElements()[userChoice]);
+                    break;
+                case MenuBuilder.DELETE_BOOK_MENU_INDEX:
+                    bookManager.prepareDeleteBook(getCurrentMenu().getMenuElements()[userChoice]);
                     break;
                 default:
 
@@ -72,42 +75,22 @@ public class ThingManager {
 
     private void prepareManageThings(MenuElement menuElement) {
         System.out.println(menuElement);
-        if (menuElement.id == SHOW_ALL_MENU_ELEMENT_ID) {
-            //findBook = getBookById();
+        if (menuElement.getId() == MenuBuilder.SHOW_ALL_MENU_ELEMENT_ID) {
             showAll();
-        } else if (menuElement.id == DELETE_ALL_MENU_ELEMENT_ID) {
-            //findBook = getBookByTitle();
+        } else if (menuElement.getId() == MenuBuilder.DELETE_ALL_MENU_ELEMENT_ID) {
             deleteAll();
         }
     }
 
     private void deleteAll() {
-        for (Iterator<Thing> iterator = things.iterator(); iterator.hasNext(); ) {
+        for (Iterator<Thing> iterator = getThings().iterator(); iterator.hasNext(); ) {
             removeThingFromManager(iterator);
         }
     }
 
-
     private void showAll() {
-        for (Thing thing : things) {
+        for (Thing thing : getThings()) {
             System.out.println(thing);
-        }
-    }
-
-    private void prepareDeleteBook(MenuElement menuElement) {
-        Book findBook = null;
-        if (menuElement.id == 1) {
-            //findBook = getBookById();
-        } else if (menuElement.id == 2) {
-            findBook = getBookByTitle();
-        }
-
-        if (findBook != null) {
-            System.out.printf("%s%n%n", findBook);
-            removeThingFromManager(findBook);
-            System.out.println(menuElement.result);
-        } else {
-            System.out.println("Книга не найдена.");
         }
     }
 
@@ -116,71 +99,37 @@ public class ThingManager {
         decreaseTotal();
     }
 
-    private void removeThingFromManager(Thing thing) {
-        things.remove(thing);
+    public void removeThingFromManager(Thing thing) {
+        getThings().remove(thing);
         decreaseTotal();
     }
 
-    private void prepareSearchBook(MenuElement menuElement) {
-        Book findBook = null;
-        if (menuElement.id == 1) {
-            //findBook = getBookById();
-        } else if (menuElement.id == 2) {
-            findBook = getBookByTitle();
-        }
-
-        if (findBook != null) {
-            System.out.println(menuElement.result);
-            System.out.printf("Автор: %s %nНазвание: %s%n%n", findBook.getAuthor(), findBook.getTitle());
-        } else {
-            System.out.println("Книга не найдена.");
-        }
+    public Thing getThingById() {
+        int id = Integer.parseInt(getStringFromUser("Введите ID предмета:"));
+        Thing thing = findThingById(id);
+        return thing;
     }
 
-    private Book getBookByTitle() {
-        Book findBook;
-        String bookTitleToSearch = getBookTitleToSearchFromUser();
-        findBook = findBookByTitle(bookTitleToSearch);
-        return findBook;
-    }
-
-    private Book findBookByTitle(String bookTitleToSearch) {
-        for (Thing thing : things) {
-            if (((Book) thing).getTitle().equalsIgnoreCase(bookTitleToSearch)) {
-                return (Book) thing;
+    public Thing findThingById(int id) {
+        for (Thing thing : getThings()) {
+            if (thing.getId() == id) {
+                return thing;
             }
         }
         return null;
     }
 
-    private String getBookTitleToSearchFromUser() {
-        String title = getStringFromUser("Введите название книги:");
-        return title;
-    }
 
-    private void prepareManageBook(MenuElement menuElement) {
-        Book bookInfoFromUser;
-        if (menuElement.id == BOOK_ADD_MENU_ELEMENT_ID) {
-            bookInfoFromUser = getBookInfoFromUser();
-            addBookToManager(bookInfoFromUser);
-            System.out.println(menuElement.result);
-        }
 
-    }
 
-    private void addBookToManager(Book bookInfoFromUser) {
-        things.add(bookInfoFromUser);
-        increaseTotal();
-    }
-
-    private Book getBookInfoFromUser() {
+    public Book getBookInfoFromUser() {
         String bookTitle = getStringFromUser("Веедите название книги:");
         String bookAuthor = getStringFromUser("Веедите автора книги:");
         Book newBook = new Book(bookAuthor, bookTitle);
         return newBook;
     }
 
-    private String getStringFromUser(String title) {
+    public String getStringFromUser(String title) {
         Scanner scanner = new Scanner(System.in);
         System.out.println(title);
         String stringInfo = scanner.nextLine();
@@ -189,7 +138,14 @@ public class ThingManager {
 
     public void createMainMenu(Menu mainMenu) {
 
-        MenuBuilder.createMainMenu(mainMenu);
+        menuBuilder.createMainMenu(mainMenu);
     }
 
+    public Menu getCurrentMenu() {
+        return currentMenu;
+    }
+
+    public void setCurrentMenu(Menu currentMenu) {
+        this.currentMenu = currentMenu;
+    }
 }
