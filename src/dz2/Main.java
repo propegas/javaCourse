@@ -9,7 +9,7 @@ import java.util.Arrays;
 public class Main {
     public static void main(String[] args) {
         int[] arr = {1, 5, 7, 9, 2, 8};
-        shiftArray(arr, 5);
+        shiftArray(arr, 2);
         System.out.println(Arrays.toString(arr));
     }
 
@@ -17,8 +17,9 @@ public class Main {
         for (int i = 0; i < n; i++) {
             int currentElement = arr[0];
             int nextElement;
-            int j = 1;
-            while (j != 0) {
+            int j = 0;
+            do {
+                j++;
                 if (j == arr.length) {
                     j = 0;
                 }
@@ -26,10 +27,7 @@ public class Main {
                 nextElement = arr[j];
                 arr[j] = currentElement;
                 currentElement = nextElement;
-                if (j != 0) {
-                    j++;
-                }
-            }
+            } while (j != 0);
         }
     }
 
