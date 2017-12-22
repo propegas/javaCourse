@@ -119,9 +119,6 @@ public class ThingManager {
         return null;
     }
 
-
-
-
     public Book getBookInfoFromUser() {
         String bookTitle = getStringFromUser("Веедите название книги:");
         String bookAuthor = getStringFromUser("Веедите автора книги:");

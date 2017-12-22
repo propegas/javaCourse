@@ -17,10 +17,6 @@ public class Horse {
     private int totalDistancePassed = 0;
     private int lastIterationDistancePassed = 0;
 
-    public Horse() {
-        //default
-    }
-
     public Horse(int horseNum) {
         createRandomHorse();
         this.num = horseNum;

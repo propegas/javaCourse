@@ -10,10 +10,6 @@ public class Player {
     private int betAmount;
     private int horseNum;
 
-    public Player() {
-        //default
-    }
-
     public void setBetFromScreen() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("На какую лошадь ставка (номер):");
