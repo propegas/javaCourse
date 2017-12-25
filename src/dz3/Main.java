@@ -1,5 +1,6 @@
 package dz3;
 
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -14,30 +15,46 @@ public class Main {
 
         String compWord = getRandomWordFromArray(words);
         boolean guessed = false;
+        int attempt = 0;
         while (!guessed) {
+            attempt++;
             String guessedWord = getStringFromUser();
             guessed = isWordsEquals(guessedWord, compWord);
             if (guessed) {
                 continue;
             }
-
             showPartOfGuessedWord(guessedWord, compWord);
         }
+
+        System.out.println("Вы угадали c " + attempt + " плопытки(ок)!");
     }
 
     private static String getRandomWordFromArray(String[] words) {
-        return null;
+        Random random = new Random();
+        int randomIndex = random.nextInt(words.length);
+        return words[randomIndex];
     }
 
     private static void showPartOfGuessedWord(String userWord, String compWord) {
         int maskedWordLength = 15;
         char maskChar = '#';
-        for (int i = 0; i < userWord.length() || i < compWord.length(); i++) {
+        System.out.println("Вы угадали буквы: ");
+        int i;
+        for (i = 0; i < userWord.length() && i < compWord.length(); i++) {
             char charAtCompWord = compWord.charAt(i);
             char charAtUserWord = userWord.charAt(i);
             printMaskOrChar(maskChar, charAtCompWord, charAtUserWord);
         }
 
+        int remainChars = maskedWordLength - i;
+        printRemainMask(maskChar, remainChars);
+        System.out.println();
+    }
+
+    private static void printRemainMask(char maskChar, int times) {
+        for (int i = 0; i < times; i++) {
+            System.out.print(maskChar);
+        }
     }
 
     private static void printMaskOrChar(char maskChar, char charAtCompWord, char charAtUserWord) {
@@ -57,6 +74,7 @@ public class Main {
     }
 
     private static String getStringFromUser() {
+        System.out.println("Введите слово: ");
         Scanner scanner = new Scanner(System.in);
         return scanner.nextLine();
     }
