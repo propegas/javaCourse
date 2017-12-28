@@ -26,7 +26,7 @@ public class CrossGame {
         initTable();
         printTable();
 
-        int firstPlayer = random.nextInt(1);
+        int firstPlayer = random.nextInt(2);
         boolean end = false;
 
         while (!end) {
@@ -75,6 +75,11 @@ public class CrossGame {
         if (isMoveCorrect(checkX, checkY)) {
             return new int[]{checkX, checkY};
         }
+        checkX = maxLine[0];
+        checkY = maxLine[1] + maxLine[2] ;
+        if (isMoveCorrect(checkX, checkY)) {
+            return new int[]{checkX, checkY};
+        }
 
         // default
         checkX = random.nextInt(TABLE_SIZE);
@@ -83,7 +88,79 @@ public class CrossGame {
     }
 
     private static int[] findMaxRow() {
-        return new int[3];
+        int[] maxRow = new int[3];
+        int[] maxLineX, maxLineO;
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            maxLineX = findMaxLine(i, X_CHAR, 0);
+            maxLineO = findMaxLine(i, O_CHAR, 0);
+
+            // check Size
+            if (maxLineX[2] > maxRow[2]) {
+                maxRow = maxLineX;
+            }
+            if (maxLineO[2] > maxRow[2]) {
+                maxRow = maxLineO;
+            }
+
+        }
+
+        return maxRow;
+    }
+
+    // lineTypeFlag = 0 - check rows
+    // lineTypeFlag = 1 - check columns
+    private static int[] findMaxLine(int line, char checkChar, int lineTypeFlag) {
+        int lineStart = 0;
+        int lineSize = 0;
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            char startChar;
+            startChar = getStartCharByLineType(line, lineTypeFlag, i);
+            if (startChar == checkChar) {
+                int tempLineStart = i;
+                int tempLineSize = 1;
+                for (int j = i + 1; j < TABLE_SIZE; j++) {
+                    char nextChar;
+                    nextChar = getStartCharByLineType(line, lineTypeFlag, j);
+                    if (nextChar == checkChar) {
+                        tempLineSize++;
+                    } else {
+                        i += tempLineSize + 1;
+                        break;
+                    }
+                }
+
+                if (tempLineSize > lineSize && checkLineSurroundByEmptyCell(tempLineStart, tempLineSize, lineTypeFlag, line)) {
+                    lineSize = tempLineSize;
+                    lineStart = tempLineStart;
+                }
+            }
+        }
+
+        if (lineTypeFlag == 0) {
+            return new int[]{line, lineStart, lineSize};
+        } else {
+            return new int[]{lineStart, line, lineSize};
+
+        }
+    }
+
+    private static boolean checkLineSurroundByEmptyCell(int tempLineStart, int tempLineSize, int lineTypeFlag, int line) {
+        if (lineTypeFlag == 0) {
+            return (table[line][tempLineStart - 1] == EMPTY_CHAR || table[line][tempLineStart + tempLineSize + 1] == EMPTY_CHAR);
+        } else {
+            return (table[tempLineStart - 1][line] == EMPTY_CHAR || table[tempLineStart + tempLineSize + 1][line] == EMPTY_CHAR);
+        }
+    }
+
+    private static char getStartCharByLineType(int line, int lineTypeFlag, int i) {
+        char startChar;
+        if (lineTypeFlag == 0) {
+            startChar = table[line][i];
+        } else {
+            startChar = table[i][line];
+        }
+        return startChar;
     }
 
     private static int[] humanMove() {
@@ -94,7 +171,7 @@ public class CrossGame {
             x = scanner.nextInt() - 1;
             y = scanner.nextInt() - 1;
             coords = new int[]{x, y};
-        } while (isMoveCorrect(coords));
+        } while (!isMoveCorrect(coords));
         return coords;
     }
 
@@ -105,7 +182,7 @@ public class CrossGame {
     }
 
     private static boolean isMoveCorrect(int x, int y) {
-        return checkCoordsIsCorrect(x, y) && table[x][y] != EMPTY_CHAR;
+        return checkCoordsIsCorrect(x, y) && table[x][y] == EMPTY_CHAR;
     }
 
     private static boolean checkCoordsIsCorrect(int x, int y) {
