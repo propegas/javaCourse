@@ -68,7 +68,7 @@ public class CrossGame {
     private static int[] getBestNextMove() {
         int[] maxLine;
         int checkX, checkY;
-        maxLine = findMaxRow();
+        maxLine = findMaxLineByType(0);
 
         checkX = maxLine[0];
         checkY = maxLine[1] - 1;
@@ -81,18 +81,31 @@ public class CrossGame {
             return new int[]{checkX, checkY};
         }
 
+        maxLine = findMaxLineByType(1);
+
+        checkY = maxLine[0];
+        checkX = maxLine[1] - 1;
+        if (isMoveCorrect(checkX, checkY)) {
+            return new int[]{checkX, checkY};
+        }
+        checkY = maxLine[0];
+        checkX = maxLine[1] + maxLine[2];
+        if (isMoveCorrect(checkX, checkY)) {
+            return new int[]{checkX, checkY};
+        }
+
         // default
         checkX = random.nextInt(TABLE_SIZE);
         checkY = random.nextInt(TABLE_SIZE);
         return new int[]{checkX, checkY};
     }
 
-    private static int[] findMaxRow() {
+    private static int[] findMaxLineByType(int lineType) {
         int[] maxRow = new int[3];
         int[] maxLineX, maxLineO;
         for (int i = 0; i < TABLE_SIZE; i++) {
-            maxLineX = findMaxLine(i, X_CHAR, 0);
-            maxLineO = findMaxLine(i, O_CHAR, 0);
+            maxLineX = findMaxLine(i, X_CHAR, lineType);
+            maxLineO = findMaxLine(i, O_CHAR, lineType);
 
             // check Size
             if (maxLineO[2] > maxRow[2]) {
