@@ -31,7 +31,7 @@ public class CrossGame {
 
         while (!end) {
             MOVE_NUMBER++;
-            int playerNum = MOVE_NUMBER % 2 + firstPlayer;
+            int playerNum = (MOVE_NUMBER + firstPlayer) % 2;
             System.out.printf("Ход игрока %d %n", playerNum);
             nextMove(playerNum);
             printTable();
@@ -76,7 +76,7 @@ public class CrossGame {
             return new int[]{checkX, checkY};
         }
         checkX = maxLine[0];
-        checkY = maxLine[1] + maxLine[2] ;
+        checkY = maxLine[1] + maxLine[2];
         if (isMoveCorrect(checkX, checkY)) {
             return new int[]{checkX, checkY};
         }
@@ -95,11 +95,11 @@ public class CrossGame {
             maxLineO = findMaxLine(i, O_CHAR, 0);
 
             // check Size
-            if (maxLineX[2] > maxRow[2]) {
-                maxRow = maxLineX;
-            }
             if (maxLineO[2] > maxRow[2]) {
                 maxRow = maxLineO;
+            }
+            if (maxLineX[2] > maxRow[2]) {
+                maxRow = maxLineX;
             }
 
         }
@@ -147,9 +147,11 @@ public class CrossGame {
 
     private static boolean checkLineSurroundByEmptyCell(int tempLineStart, int tempLineSize, int lineTypeFlag, int line) {
         if (lineTypeFlag == 0) {
-            return (table[line][tempLineStart - 1] == EMPTY_CHAR || table[line][tempLineStart + tempLineSize + 1] == EMPTY_CHAR);
+            return (table[line][tempLineStart - 1] == EMPTY_CHAR ||
+                    (tempLineStart + tempLineSize < TABLE_SIZE && table[line][tempLineStart + tempLineSize] == EMPTY_CHAR));
         } else {
-            return (table[tempLineStart - 1][line] == EMPTY_CHAR || table[tempLineStart + tempLineSize + 1][line] == EMPTY_CHAR);
+            return (table[tempLineStart - 1][line] == EMPTY_CHAR ||
+                    (tempLineStart + tempLineSize < TABLE_SIZE && table[tempLineStart + tempLineSize][line] == EMPTY_CHAR));
         }
     }
 
