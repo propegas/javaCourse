@@ -74,7 +74,11 @@ public class CrossGame {
     }
 
     private static int[] compMove() {
-        return getBestNextMove();
+        int[] bestNextMove;
+        do {
+            bestNextMove = getBestNextMove();
+        } while (!isMoveCorrect(bestNextMove));
+        return bestNextMove;
     }
 
     private static int[] getBestNextMove() {
@@ -85,9 +89,9 @@ public class CrossGame {
         int[] maxLineColumn = findMaxLineByType(1, false);
         System.out.println("Максимальная непрерывная открытая колонка: " + maxLineColumn[2] + " элемента");
         int[] maxLineDiag1 = findMaxLineByType(2, false);
-        System.out.println("Максимальная непрерывная открытая диагональ1: " + maxLineColumn[2] + " элемента");
+        System.out.println("Максимальная непрерывная открытая диагональ типа 1: " + maxLineDiag1[2] + " элемента");
         int[] maxLineDiag2 = findMaxLineByType(3, false);
-        System.out.println("Максимальная непрерывная открытая диагональ2: " + maxLineColumn[2] + " элемента");
+        System.out.println("Максимальная непрерывная открытая диагональ2: " + maxLineDiag2[2] + " элемента");
 
         int[] moveFromLine = getNextMoveFromMaxLines(maxLineRow, maxLineColumn, maxLineDiag1, maxLineDiag2);
         if (moveFromLine != null) {
@@ -108,11 +112,18 @@ public class CrossGame {
                 return moveFromLineColumn;
             }
         }
-        if (maxLineRow[2] > 0 && maxLineRow[2] >= maxLineColumn[2]) {
+        if (maxLineRow[2] > 0 && maxLineRow[2] >= maxLineColumn[2] && maxLineRow[2] >= maxLineDiag1[2] && maxLineRow[2] >= maxLineDiag2[2]) {
             int[] moveFromLineRow = checkLineForCorrectMove(maxLineRow, 0);
             if (moveFromLineRow != null) {
                 System.out.println("Блокируем строку...");
                 return moveFromLineRow;
+            }
+        }
+        if (maxLineDiag1[2] > 0 && maxLineDiag1[2] >= maxLineColumn[2] && maxLineDiag1[2] >= maxLineDiag2[2] && maxLineDiag1[2] >= maxLineRow[2]) {
+            int[] moveFromLineDiag = checkLineForCorrectMove(maxLineDiag1, 2);
+            if (maxLineDiag1 != null) {
+                System.out.println("Блокируем диагональ типа 1...");
+                return moveFromLineDiag;
             }
         }
         return null;
@@ -153,21 +164,38 @@ public class CrossGame {
         // index 1 - begin of line (Y)
         // index 2 - size of continious line
         int[] maxRow = new int[3];
-        int[] maxLineX, maxLineO;
-        for (int i = 0; i < TABLE_SIZE; i++) {
-            maxLineX = findMaxLine(i, X_CHAR, lineType, checkWinLine);
-            maxLineO = findMaxLine(i, O_CHAR, lineType, checkWinLine);
 
-            // check Size
-            if (maxLineO[2] > maxRow[2]) {
-                maxRow = maxLineO;
-            }
-            if (maxLineX[2] > maxRow[2]) {
-                maxRow = maxLineX;
-            }
+        if (lineType == 0 || lineType == 1) {
+            int[] maxLineX = new int[3], maxLineO = new int[3];
+            /*for (int i = 0; i < TABLE_SIZE; i++) {
+                maxLineX = findMaxLine(i, X_CHAR, lineType, checkWinLine);
+                maxLineO = findMaxLine(i, O_CHAR, lineType, checkWinLine);
 
+                // check Size
+                if (maxLineO[2] > maxRow[2]) {
+                    maxRow = maxLineO;
+                }
+                if (maxLineX[2] > maxRow[2]) {
+                    maxRow = maxLineX;
+                }
+            }*/
+        } else if (lineType == 2) {
+
+            int[] maxDiagX, maxDiagO;
+            int startOuterIndex = WIN_LINE - TABLE_SIZE;
+            while (startOuterIndex <= TABLE_SIZE - WIN_LINE) {
+                maxDiagX = findMaxLine(startOuterIndex, X_CHAR, lineType, checkWinLine);
+                maxDiagO = findMaxLine(startOuterIndex, O_CHAR, lineType, checkWinLine);
+                startOuterIndex++;
+                // check Size
+                if (maxDiagX[2] > maxRow[2]) {
+                    maxRow = maxDiagX;
+                }
+                if (maxDiagO[2] > maxRow[2]) {
+                    maxRow = maxDiagO;
+                }
+            }
         }
-
         return maxRow;
     }
 
@@ -176,43 +204,118 @@ public class CrossGame {
     private static int[] findMaxLine(int line, char checkChar, int lineTypeFlag, boolean checkWinLine) {
         // index 0 - begin of line (X)
         // index 1 - begin of line (Y)
-        // index 2 - size of continious line
+        // index 2 - size of continuous line
 
         int lineStart = 0;
         int lineSize = 0;
 
-        for (int i = 0; i < TABLE_SIZE; i++) {
+        int i = getStartOuterIndex(lineTypeFlag);
+        int origLine = line;
+        int j = line;
+        do {
             char startChar;
             startChar = getStartCharByLineType(line, lineTypeFlag, i);
             if (startChar == checkChar) {
                 int tempLineStart = i;
                 int tempLineSize = 1;
-                for (int j = i + 1; j < TABLE_SIZE; j++) {
+                int tempIndex = i;
+                while (checkInnerCondition(tempIndex, j, lineTypeFlag)) {
+                    tempIndex = getNextOuterIndex(tempIndex, lineTypeFlag);
+                    j = getNextOuterLine(line, lineTypeFlag);
                     char nextChar;
-                    nextChar = getStartCharByLineType(line, lineTypeFlag, j);
+                    nextChar = getStartCharByLineType(j, lineTypeFlag, tempIndex);
                     if (nextChar == checkChar) {
                         tempLineSize++;
                     } else {
-                        i += tempLineSize + 1;
+                        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+                            i += tempLineSize + 1;
+                        }
                         break;
                     }
+//                    j++;
                 }
 
                 if (checkWinLine || checkLineSurroundByEmptyCell(tempLineStart, tempLineSize, lineTypeFlag, line)) {
                     if (tempLineSize > lineSize) {
                         lineSize = tempLineSize;
                         lineStart = tempLineStart;
+                        origLine = line;
                     }
                 }
             }
-        }
+            i = getNextOuterIndex(i, lineTypeFlag);
+            line = getNextOuterLine(line, lineTypeFlag);
+        } while (checkOuterCondition(i, line, lineTypeFlag));
 
         if (lineTypeFlag == 0) {
-            return new int[]{line, lineStart, lineSize};
+            return new int[]{origLine, lineStart, lineSize};
         } else {
-            return new int[]{lineStart, line, lineSize};
+            return new int[]{lineStart, origLine, lineSize};
 
         }
+    }
+
+    private static int getNextOuterLine(int line, int lineTypeFlag) {
+        int nextLine = line;
+
+        if (lineTypeFlag == 2) {
+            nextLine = line + 1;
+        }
+
+        return nextLine;
+    }
+
+    private static int getNextOuterIndex(int i, int lineTypeFlag) {
+        int nextI = i;
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+            nextI = i + 1;
+        }
+        if (lineTypeFlag == 2) {
+            nextI = i - 1;
+        }
+
+        return nextI;
+    }
+
+    private static int getStartOuterIndex(int lineTypeFlag) {
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+            return 0;
+        }
+        if (lineTypeFlag == 2) {
+            return (TABLE_SIZE - 1);
+        }
+
+        return 0;
+    }
+
+    private static int getNextInnerIndex(int i, int lineTypeFlag) {
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+            return i + 1;
+        }
+
+        return 0;
+    }
+
+    private static boolean checkOuterCondition(int i, int j, int lineTypeFlag) {
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+            return i < TABLE_SIZE;
+        }
+        if (lineTypeFlag == 2) {
+            return ((i >= 0 && j < TABLE_SIZE));
+        }
+
+        return false;
+    }
+
+    private static boolean checkInnerCondition(int i, int j, int lineTypeFlag) {
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
+            return i < TABLE_SIZE - 1;
+        }
+        if (lineTypeFlag == 2) {
+            return j >= 0 && i < TABLE_SIZE;
+        }
+
+        return false;
     }
 
     private static boolean checkLineSurroundByEmptyCell(int lineStart, int lineSize, int lineTypeFlag, int line) {
@@ -224,7 +327,7 @@ public class CrossGame {
                 return true;
             }
             return false;
-        } else {
+        } else if (lineTypeFlag == 1) {
             if (checkCoordsIsCorrect(lineStart - 1, line) && table[lineStart - 1][line] == EMPTY_CHAR) {
                 return true;
             }
@@ -232,16 +335,33 @@ public class CrossGame {
                 return true;
             }
             return false;
+        } else if (lineTypeFlag == 2) {
+            if (checkCoordsIsCorrect(lineStart + 1, line - 1) && table[lineStart + 1][line - 1] == EMPTY_CHAR) {
+                return true;
+            }
+            if (checkCoordsIsCorrect(lineStart - lineSize, line + lineSize) && table[lineStart - lineSize][line + lineSize] == EMPTY_CHAR) {
+                return true;
+            }
+            return false;
         }
+
+        return false;
     }
 
     private static char getStartCharByLineType(int line, int lineTypeFlag, int i) {
         char startChar;
         if (lineTypeFlag == 0) {
             startChar = table[line][i];
-        } else {
+        } else if (lineTypeFlag == 1) {
             startChar = table[i][line];
+        } else if (lineTypeFlag == 2 && checkCoordsIsCorrect(i, line)) {
+            startChar = table[i][line];
+        } else if (lineTypeFlag == 3) {
+            startChar = table[i][line];
+        } else {
+            startChar = EMPTY_CHAR;
         }
+
         return startChar;
     }
 
