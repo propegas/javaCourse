@@ -50,8 +50,10 @@ public class CrossGame {
         System.out.println("Максимальная непрерывная строка: " + maxLineRow[2] + " элемента");
         int[] maxLineColumn = findMaxLineByType(1, true);
         System.out.println("Максимальная непрерывная колонка: " + maxLineColumn[2] + " элемента");
+        int[] maxLineDiag1 = findMaxLineByType(2, true);
+        System.out.println("Максимальная непрерывная диагональ типа 1: " + maxLineDiag1[2] + " элемента");
 
-        if (maxLineRow[2] == WIN_LINE || maxLineColumn[2] == WIN_LINE) {
+        if (maxLineRow[2] == WIN_LINE || maxLineColumn[2] == WIN_LINE || maxLineDiag1[2] == WIN_LINE) {
             System.out.println("Победил игрок " + playerNum);
             return true;
         }
@@ -105,18 +107,18 @@ public class CrossGame {
     }
 
     private static int[] getNextMoveFromMaxLines(int[] maxLineRow, int[] maxLineColumn, int[] maxLineDiag1, int[] maxLineDiag2) {
-        if (maxLineColumn[2] > 0 && maxLineColumn[2] >= maxLineRow[2] && maxLineColumn[2] >= maxLineDiag1[2] && maxLineColumn[2] >= maxLineDiag2[2]) {
-            int[] moveFromLineColumn = checkLineForCorrectMove(maxLineColumn, 1);
-            if (moveFromLineColumn != null) {
-                System.out.println("Блокируем колонку...");
-                return moveFromLineColumn;
-            }
-        }
         if (maxLineRow[2] > 0 && maxLineRow[2] >= maxLineColumn[2] && maxLineRow[2] >= maxLineDiag1[2] && maxLineRow[2] >= maxLineDiag2[2]) {
             int[] moveFromLineRow = checkLineForCorrectMove(maxLineRow, 0);
             if (moveFromLineRow != null) {
                 System.out.println("Блокируем строку...");
                 return moveFromLineRow;
+            }
+        }
+        if (maxLineColumn[2] > 0 && maxLineColumn[2] >= maxLineRow[2] && maxLineColumn[2] >= maxLineDiag1[2] && maxLineColumn[2] >= maxLineDiag2[2]) {
+            int[] moveFromLineColumn = checkLineForCorrectMove(maxLineColumn, 1);
+            if (moveFromLineColumn != null) {
+                System.out.println("Блокируем колонку...");
+                return moveFromLineColumn;
             }
         }
         if (maxLineDiag1[2] > 0 && maxLineDiag1[2] >= maxLineColumn[2] && maxLineDiag1[2] >= maxLineDiag2[2] && maxLineDiag1[2] >= maxLineRow[2]) {
@@ -130,16 +132,20 @@ public class CrossGame {
     }
 
     private static int[] checkLineForCorrectMove(int[] maxLine, int lineType) {
-        int checkX, checkY;
+        int checkX = 0, checkY = 0;
 
         // element - 1
         if (lineType == 0) {
             checkX = maxLine[0];
             checkY = maxLine[1] - 1;
-        } else {
-            checkY = maxLine[1];
-            checkX = maxLine[0] - 1;
+        } else if (lineType == 1) {
+            checkY = maxLine[0];
+            checkX = maxLine[1] - 1;
+        } else if (lineType == 2) {
+            checkY = maxLine[1] - 1;
+            checkX = maxLine[0] + 1;
         }
+
         if (isMoveCorrect(checkX, checkY)) {
             return new int[]{checkX, checkY};
         }
@@ -148,9 +154,12 @@ public class CrossGame {
         if (lineType == 0) {
             checkX = maxLine[0];
             checkY = maxLine[1] + maxLine[2];
-        } else {
-            checkY = maxLine[1];
-            checkX = maxLine[0] + maxLine[2];
+        } else if (lineType == 1) {
+            checkY = maxLine[0];
+            checkX = maxLine[1] + maxLine[2];
+        } else if (lineType == 2) {
+            checkY = maxLine[1] + maxLine[2];
+            checkX = maxLine[0] - maxLine[2];
         }
         if (isMoveCorrect(checkX, checkY)) {
             return new int[]{checkX, checkY};
@@ -167,7 +176,7 @@ public class CrossGame {
 
         if (lineType == 0 || lineType == 1) {
             int[] maxLineX = new int[3], maxLineO = new int[3];
-            /*for (int i = 0; i < TABLE_SIZE; i++) {
+            for (int i = 0; i < TABLE_SIZE; i++) {
                 maxLineX = findMaxLine(i, X_CHAR, lineType, checkWinLine);
                 maxLineO = findMaxLine(i, O_CHAR, lineType, checkWinLine);
 
@@ -178,7 +187,7 @@ public class CrossGame {
                 if (maxLineX[2] > maxRow[2]) {
                     maxRow = maxLineX;
                 }
-            }*/
+            }
         } else if (lineType == 2) {
 
             int[] maxDiagX, maxDiagO;
@@ -205,6 +214,7 @@ public class CrossGame {
         // index 0 - begin of line (X)
         // index 1 - begin of line (Y)
         // index 2 - size of continuous line
+//        System.err.println("line: " + line);
 
         int lineStart = 0;
         int lineSize = 0;
@@ -219,11 +229,11 @@ public class CrossGame {
                 int tempLineStart = i;
                 int tempLineSize = 1;
                 int tempIndex = i;
-                while (checkInnerCondition(tempIndex, j, lineTypeFlag)) {
+                while (checkInnerCondition(tempIndex, line, lineTypeFlag)) {
                     tempIndex = getNextOuterIndex(tempIndex, lineTypeFlag);
-                    j = getNextOuterLine(line, lineTypeFlag);
+                    line = getNextOuterLine(line, lineTypeFlag);
                     char nextChar;
-                    nextChar = getStartCharByLineType(j, lineTypeFlag, tempIndex);
+                    nextChar = getStartCharByLineType(line, lineTypeFlag, tempIndex);
                     if (nextChar == checkChar) {
                         tempLineSize++;
                     } else {
@@ -239,7 +249,9 @@ public class CrossGame {
                     if (tempLineSize > lineSize) {
                         lineSize = tempLineSize;
                         lineStart = tempLineStart;
-                        origLine = line;
+                        if (lineTypeFlag == 2 || lineTypeFlag == 3) {
+                            origLine = line;
+                        }
                     }
                 }
             }
@@ -247,10 +259,10 @@ public class CrossGame {
             line = getNextOuterLine(line, lineTypeFlag);
         } while (checkOuterCondition(i, line, lineTypeFlag));
 
-        if (lineTypeFlag == 0) {
+        if (lineTypeFlag == 0 || lineTypeFlag == 1) {
             return new int[]{origLine, lineStart, lineSize};
         } else {
-            return new int[]{lineStart, origLine, lineSize};
+            return new int[]{lineStart, origLine - lineSize, lineSize};
 
         }
     }
@@ -312,7 +324,7 @@ public class CrossGame {
             return i < TABLE_SIZE - 1;
         }
         if (lineTypeFlag == 2) {
-            return j >= 0 && i < TABLE_SIZE;
+            return i >= 0 && j < TABLE_SIZE;
         }
 
         return false;
@@ -328,18 +340,23 @@ public class CrossGame {
             }
             return false;
         } else if (lineTypeFlag == 1) {
-            if (checkCoordsIsCorrect(lineStart - 1, line) && table[lineStart - 1][line] == EMPTY_CHAR) {
+            if (checkCoordsIsCorrect(lineStart + 1, line) && table[lineStart + 1][line] == EMPTY_CHAR) {
                 return true;
             }
-            if (checkCoordsIsCorrect(lineStart + lineSize, line) && table[lineStart + lineSize][line] == EMPTY_CHAR) {
+            if (checkCoordsIsCorrect(lineStart - lineSize, line) && table[lineStart - lineSize][line] == EMPTY_CHAR) {
                 return true;
             }
             return false;
         } else if (lineTypeFlag == 2) {
-            if (checkCoordsIsCorrect(lineStart + 1, line - 1) && table[lineStart + 1][line - 1] == EMPTY_CHAR) {
+          /*  System.err.println("lineStart: " + lineStart);
+            System.err.println("line: " + line);
+            System.err.println("lineSize: " + lineSize);*/
+            if (checkCoordsIsCorrect(lineStart + 1, line - lineSize - 1) && table[lineStart + 1][line - lineSize - 1] == EMPTY_CHAR) {
+//                System.err.println("checkCoordsIsCorrect 1: " + true);
                 return true;
             }
-            if (checkCoordsIsCorrect(lineStart - lineSize, line + lineSize) && table[lineStart - lineSize][line + lineSize] == EMPTY_CHAR) {
+            if (checkCoordsIsCorrect(lineStart - lineSize, line) && table[lineStart - lineSize][line] == EMPTY_CHAR) {
+//                System.err.println("checkCoordsIsCorrect 2: " + true);
                 return true;
             }
             return false;
