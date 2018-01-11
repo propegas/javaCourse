@@ -19,17 +19,14 @@ public class Ships implements ShipOperable {
     }
 
     @Override
-    public boolean addShip(Ship ship) {
+    public void addShip(Ship ship) {
 
-        if (!checkShipIntersection(ship)) {
-            this.shipList.add(ship);
-            return true;
-        }
+        this.shipList.add(ship);
 
-        return false;
     }
 
-    private boolean checkShipIntersection(Ship newShip) {
+
+    public boolean checkShipIntersection(Ship newShip) {
         for (Ship ship : shipList) {
             List<Coords> shipCells = ship.getShipCells();
             for (Coords shipCoord : shipCells) {

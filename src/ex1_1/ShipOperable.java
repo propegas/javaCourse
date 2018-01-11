@@ -6,6 +6,6 @@ package ex1_1;
  */
 public interface ShipOperable {
 
-    boolean addShip(Ship ship);
+    void addShip(Ship ship);
 
 }

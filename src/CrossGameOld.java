@@ -5,7 +5,7 @@ import java.util.Objects;
  * Created by vgoryachev on 30.11.2017.
  * Package: PACKAGE_NAME.
  */
-public class SeaBattle {
+public class CrossGameOld {
     public static void main(String[] args) throws InterruptedException {
 
         char[][] table = init();

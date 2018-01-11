@@ -1,5 +1,7 @@
 package ex1_1;
 
+import java.util.List;
+
 /**
  * Created by vgoryachev on 10.01.2018.
  * Package: ex1_1.
@@ -48,7 +50,8 @@ public class Field {
     }
 
     public boolean addShip(Ship ship) {
-        if (ships.addShip(ship)) {
+        if (!ships.checkShipIntersection(ship) && !checkShipMargin(ship)) {
+            ships.addShip(ship);
             for (Coords coord : ship.getShipCells()) {
                 cells[coord.getX()][coord.getY()] = SHIP_CHAR;
             }
@@ -60,5 +63,16 @@ public class Field {
     public void addRandomShip(short maxShipSize, int tableSize) {
         Ship ship = this.ships.getRandomShip(maxShipSize, tableSize);
         addShip(ship);
+    }
+
+    private boolean checkShipMargin(Ship ship) {
+        List<Coords> shipCells = ship.getShipCells();
+        for (Coords shipCoord : shipCells) {
+            if (shipCoord.getX() >= size || shipCoord.getY() >= size ||
+                    shipCoord.getX() < 0 || shipCoord.getY() < 0){
+                return true;
+            }
+        }
+        return false;
     }
 }

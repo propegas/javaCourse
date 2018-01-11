@@ -9,6 +9,19 @@ import java.util.Scanner;
  */
 public class Main {
     public static void main(String[] args) {
+
+        int e = new int[4][8].length;
+        System.out.println(e);
+
+        String s = "vavav = " + 2 + 2;
+        System.out.println(s);
+        String s1 = "Java";
+        String s2 = new String("Java");
+        System.out.println(s1);
+        System.out.println(s2);
+        System.out.println(s1 == s2);
+        System.out.println(s1.equals(s2));
+
         String[] words = {"apple", "orange", "lemon", "banana", "apricot", "avocado", "broccoli", "carrot", "cherry",
                 "garlic", "grape", "melon", "leak", "kiwi", "mango", "mushroom", "nut", "olive", "pea", "peanut",
                 "pear", "pepper", "pineapple", "pumpkin", "potato"};

@@ -25,7 +25,7 @@ public class Ship {
     public Ship(short maxShipSize, int tableSize) {
         // default random
         Random random = new Random();
-        this.size = (short) random.nextInt(maxShipSize);
+        this.size = (short) (random.nextInt(maxShipSize) + 1);
 
         int type = random.nextInt(2);
         int x = random.nextInt(tableSize);
@@ -35,7 +35,6 @@ public class Ship {
             endCoord = new Coords((short) (x + size), (short) y);
         } else {
             endCoord = new Coords((short) x, (short) (y + size));
-
         }
     }
 

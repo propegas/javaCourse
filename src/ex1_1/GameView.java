@@ -45,8 +45,9 @@ public class GameView implements GameViewable {
     }
 
     private void showHeader(int size) {
+        System.out.print(String.format(" \t "));
         for (int i = 0; i < size; i++) {
-            System.out.print(String.format("%c ", A_CHAR + size));
+            System.out.print(String.format("%c ", A_CHAR + i));
         }
         System.out.println();
     }
