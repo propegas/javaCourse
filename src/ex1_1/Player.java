@@ -1,10 +1,14 @@
 package ex1_1;
 
+import static ex1_1.SeaBattle.TABLE_SIZE;
+
 /**
  * Created by vgoryachev on 10.01.2018.
  * Package: ex1_1.
  */
 public class Player {
+
+    private Field field;
     private String name;
     private short id;
     private boolean isComp = false;
@@ -13,6 +17,15 @@ public class Player {
         this.name = name;
         this.id = id;
         this.isComp = isComp;
+        this.field = new Field(TABLE_SIZE);
+    }
+
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
     }
 
     public String getName() {

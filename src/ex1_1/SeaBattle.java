@@ -9,12 +9,12 @@ import java.util.List;
  */
 public class SeaBattle extends Game {
 
-    private static final int MAX_SHIP_SIZE = 4;
-    private static final int SHIPS_COUNT = 6;
+    public static final int TABLE_SIZE = 10;
+    private static final short MAX_SHIP_SIZE = 4;
+    private static final short MAX_SHIPS_COUNT_BY_PLAYER = 6;
 
     private static SeaBattle currentGameInstance;
 
-    private Ships ships;
     private boolean autoCreateShips;
     private List<Player> playerList = new ArrayList<>(2);
     private GameView gameView = new GameView();
@@ -38,6 +38,15 @@ public class SeaBattle extends Game {
                 String userNameForPlayer = gameView.getNameFromUser(player.getId());
                 player.setName(userNameForPlayer);
             }
+
+            if (autoCreateShips) {
+                while (player.getField().getShips().getShipList().size() < MAX_SHIPS_COUNT_BY_PLAYER) {
+                    player.getField().addRandomShip(MAX_SHIP_SIZE);
+                }
+            }
+
+            gameView.showField(player);
+
         }
 
     }

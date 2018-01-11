@@ -8,13 +8,43 @@ import java.util.List;
  * Package: ex1_1.
  */
 public class Ships implements ShipOperable {
-    private List<Ship> ships = new ArrayList<>();
+    private List<Ship> shipList = new ArrayList<>();
 
-    public List<Ship> getShips() {
-        return ships;
+    public List<Ship> getShipList() {
+        return shipList;
     }
 
-    public void setShips(List<Ship> ships) {
-        this.ships = ships;
+    public void setShipList(List<Ship> shipList) {
+        this.shipList = shipList;
+    }
+
+    @Override
+    public boolean addShip(Ship ship) {
+
+        if (!checkShipIntersection(ship)) {
+            this.shipList.add(ship);
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean checkShipIntersection(Ship newShip) {
+        for (Ship ship : shipList) {
+            List<Coords> shipCells = ship.getShipCells();
+            for (Coords shipCoord : shipCells) {
+                for (Coords newShipCoord : newShip.getShipCells()) {
+                    if (shipCoord.equals(newShipCoord)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public Ship addRandomShip(short maxSize) {
+        Ship ship = new Ship(maxSize);
+        return ship;
     }
 }
