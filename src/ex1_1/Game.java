@@ -11,7 +11,6 @@ public abstract class Game {
     public static final int COMP_VS_COMP = 2;
     public static final boolean  AUTO_CREATE_SHIPS = true;
 
-    private Field field = new Field();
     private int gameType;
 
     protected Game(int gameType) {
@@ -38,11 +37,4 @@ public abstract class Game {
         this.gameType = gameType;
     }
 
-    public Field getField() {
-        return field;
-    }
-
-    public void setField(Field field) {
-        this.field = field;
-    }
 }
