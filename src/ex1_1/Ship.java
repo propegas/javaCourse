@@ -22,10 +22,21 @@ public class Ship {
         this.status = ALIVE;
     }
 
-    public Ship(short maxShipSize) {
+    public Ship(short maxShipSize, int tableSize) {
         // default random
         Random random = new Random();
         this.size = (short) random.nextInt(maxShipSize);
+
+        int type = random.nextInt(2);
+        int x = random.nextInt(tableSize);
+        int y = random.nextInt(tableSize);
+        startCoord = new Coords((short) x, (short) y);
+        if (type == 0) {
+            endCoord = new Coords((short) (x + size), (short) y);
+        } else {
+            endCoord = new Coords((short) x, (short) (y + size));
+
+        }
     }
 
     public short getSize() {

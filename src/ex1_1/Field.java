@@ -16,6 +16,7 @@ public class Field {
 
     public Field(int tableSize) {
         this.size = tableSize;
+        this.ships = new Ships();
         this.cells = new char[tableSize][tableSize];
 
         for (int i = 0; i < cells.length; i++) {
@@ -56,8 +57,8 @@ public class Field {
         return false;
     }
 
-    public void addRandomShip(short maxShipSize) {
-        Ship ship = this.ships.getRandomShip(maxShipSize);
+    public void addRandomShip(short maxShipSize, int tableSize) {
+        Ship ship = this.ships.getRandomShip(maxShipSize, tableSize);
         addShip(ship);
     }
 }

@@ -41,7 +41,7 @@ public class SeaBattle extends Game {
 
             if (autoCreateShips) {
                 while (player.getField().getShips().getShipList().size() < MAX_SHIPS_COUNT_BY_PLAYER) {
-                    player.getField().addRandomShip(MAX_SHIP_SIZE);
+                    player.getField().addRandomShip(MAX_SHIP_SIZE, TABLE_SIZE);
                 }
             }
 

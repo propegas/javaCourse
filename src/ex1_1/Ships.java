@@ -43,8 +43,8 @@ public class Ships implements ShipOperable {
         return false;
     }
 
-    public Ship getRandomShip(short maxSize) {
-        Ship ship = new Ship(maxSize);
+    public Ship getRandomShip(short maxSize, int tableSize) {
+        Ship ship = new Ship(maxSize, tableSize);
         return ship;
     }
 }
