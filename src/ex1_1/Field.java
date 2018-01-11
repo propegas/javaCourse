@@ -6,6 +6,7 @@ package ex1_1;
  */
 public class Field {
     public static char X_CHAR = 'X';
+    public static char SHIP_CHAR = '+';
     public static char DOT_CHAR = '.';
     public static char EMPTY_CHAR = ' ';
 
@@ -46,11 +47,17 @@ public class Field {
     }
 
     public boolean addShip(Ship ship) {
-        return ships.addShip(ship);
+        if (ships.addShip(ship)) {
+            for (Coords coord : ship.getShipCells()) {
+                cells[coord.getX()][coord.getY()] = SHIP_CHAR;
+            }
+            return true;
+        }
+        return false;
     }
 
     public void addRandomShip(short maxShipSize) {
-        Ship ship = this.ships.addRandomShip(maxShipSize);
+        Ship ship = this.ships.getRandomShip(maxShipSize);
         addShip(ship);
     }
 }
