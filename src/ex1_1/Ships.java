@@ -31,7 +31,7 @@ public class Ships implements ShipOperable {
             List<Coords> shipCells = ship.getShipCells();
             for (Coords shipCoord : shipCells) {
                 for (Coords newShipCoord : newShip.getShipCells()) {
-                    if (shipCoord.equals(newShipCoord)) {
+                    if (shipCoord.equals(newShipCoord) || shipCoord.near(newShipCoord)) {
                         return true;
                     }
                 }

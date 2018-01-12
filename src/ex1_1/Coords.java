@@ -29,6 +29,23 @@ public class Coords {
         this.y = y;
     }
 
+    public boolean near(Coords o) {
+
+        Coords coords = (Coords) o;
+
+        if (x == coords.x + 1 || x == coords.x - 1) {
+            return y == coords.y;
+        }
+        if (y == coords.y + 1 || y == coords.y - 1) {
+            return x == coords.x;
+        }
+        if (x == coords.x + 1 || x == coords.x - 1) {
+            return (y == coords.y - 1 || y == coords.y + 1);
+        }
+
+        return false;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -50,7 +50,7 @@ public class Field {
     }
 
     public boolean addShip(Ship ship) {
-        if (!ships.checkShipIntersection(ship) && !checkShipMargin(ship)) {
+        if (!ships.checkShipIntersection(ship) && !checkShipFieldMargin(ship)) {
             ships.addShip(ship);
             for (Coords coord : ship.getShipCells()) {
                 cells[coord.getX()][coord.getY()] = SHIP_CHAR;
@@ -65,7 +65,7 @@ public class Field {
         addShip(ship);
     }
 
-    private boolean checkShipMargin(Ship ship) {
+    private boolean checkShipFieldMargin(Ship ship) {
         List<Coords> shipCells = ship.getShipCells();
         for (Coords shipCoord : shipCells) {
             if (shipCoord.getX() >= size || shipCoord.getY() >= size ||
