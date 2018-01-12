@@ -15,6 +15,7 @@ public class SeaBattle extends Game {
 
     private static SeaBattle currentGameInstance;
 
+    private Player currentPlayer;
     private boolean autoCreateShips;
     private List<Player> playerList = new ArrayList<>(2);
     private GameView gameView = new GameView();
@@ -53,7 +54,7 @@ public class SeaBattle extends Game {
 
     @Override
     public void start() {
-
+        this.currentPlayer = playerList.get(0);
     }
 
     @Override
@@ -73,8 +74,15 @@ public class SeaBattle extends Game {
 
     @Override
     void nextPlayerMove() {
-
+        gameView.showNextPlayerMoveGreeting(currentPlayer);
+        gameView.showField(currentPlayer);
+        for (Player player : playerList) {
+            if (player != currentPlayer) {
+                gameView.showField(player, false);
+            }
+        }
     }
+
 
     public List<Player> getPlayerList() {
         return playerList;

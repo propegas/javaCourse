@@ -7,8 +7,8 @@ import java.util.List;
  * Package: ex1_1.
  */
 public class Field {
-    public static char X_CHAR = 'X';
-    public static char SHIP_CHAR = '+';
+    public static char INJURED_SHIP_CHAR = 'X';
+    public static char LIVE_SHIP_CHAR = '+';
     public static char DOT_CHAR = '.';
     public static char EMPTY_CHAR = ' ';
 
@@ -53,7 +53,7 @@ public class Field {
         if (!ships.checkShipIntersection(ship) && !checkShipFieldMargin(ship)) {
             ships.addShip(ship);
             for (Coords coord : ship.getShipCells()) {
-                cells[coord.getX()][coord.getY()] = SHIP_CHAR;
+                cells[coord.getX()][coord.getY()] = LIVE_SHIP_CHAR;
             }
             return true;
         }

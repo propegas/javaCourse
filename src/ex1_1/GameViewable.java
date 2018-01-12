@@ -8,4 +8,9 @@ public interface GameViewable {
     String getNameFromUser(short id);
 
     void showField(Player player);
+
+    void showField(Player player, boolean showShips);
+
+    void showNextPlayerMoveGreeting(Player currentPlayer);
+
 }
