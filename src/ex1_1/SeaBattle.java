@@ -73,7 +73,7 @@ public class SeaBattle extends Game {
     }
 
     @Override
-    void nextPlayerMove() {
+    void currentPlayerMove() {
         gameView.showNextPlayerMoveGreeting(currentPlayer);
         gameView.showField(currentPlayer);
         for (Player player : playerList) {
@@ -81,8 +81,22 @@ public class SeaBattle extends Game {
                 gameView.showField(player, false);
             }
         }
+
     }
 
+    @Override
+    public void setNextPlayer() {
+        for (int i = 0; i < playerList.size(); i++) {
+            Player player = playerList.get(i);
+            if (player == currentPlayer) {
+                if (i == playerList.size() - 1) {
+                    i = -1;
+                }
+                this.currentPlayer = playerList.get(i + 1);
+                return;
+            }
+        }
+    }
 
     public List<Player> getPlayerList() {
         return playerList;

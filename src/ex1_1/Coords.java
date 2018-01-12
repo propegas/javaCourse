@@ -34,13 +34,10 @@ public class Coords {
         Coords coords = (Coords) o;
 
         if (x == coords.x + 1 || x == coords.x - 1) {
-            return y == coords.y;
+            return (y == coords.y || y == coords.y - 1 || y == coords.y + 1);
         }
         if (y == coords.y + 1 || y == coords.y - 1) {
-            return x == coords.x;
-        }
-        if (x == coords.x + 1 || x == coords.x - 1) {
-            return (y == coords.y - 1 || y == coords.y + 1);
+            return (x == coords.x || x == coords.x - 1 || x == coords.x + 1);
         }
 
         return false;

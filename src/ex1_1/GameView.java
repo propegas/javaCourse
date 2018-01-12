@@ -43,8 +43,11 @@ public class GameView implements GameViewable {
             char[] chars = field.getCells()[i];
             System.out.print(String.format("%d\t%c", i + 1, '|'));
             for (int j = 0; j < chars.length; j++) {
-                if (!showShips && chars[j] != Field.LIVE_SHIP_CHAR);
-                System.out.print(String.format("%c%c", chars[j], '|'));
+                if (showShips || chars[j] != Field.LIVE_SHIP_CHAR) {
+                    System.out.print(String.format("%c%c", chars[j], '|'));
+                } else {
+                    System.out.print(String.format("%c%c", Field.EMPTY_CHAR, '|'));
+                }
             }
             System.out.println();
         }
@@ -52,6 +55,9 @@ public class GameView implements GameViewable {
 
     @Override
     public void showNextPlayerMoveGreeting(Player currentPlayer) {
+        System.out.println();
+        System.out.println("============");
+
         System.out.println("Ход игрока " + currentPlayer);
     }
 

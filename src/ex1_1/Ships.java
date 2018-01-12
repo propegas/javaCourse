@@ -25,9 +25,12 @@ public class Ships implements ShipOperable {
 
     }
 
-
     public boolean checkShipIntersection(Ship newShip) {
         for (Ship ship : shipList) {
+            if (ship == newShip) {
+                continue;
+            }
+
             List<Coords> shipCells = ship.getShipCells();
             for (Coords shipCoord : shipCells) {
                 for (Coords newShipCoord : newShip.getShipCells()) {

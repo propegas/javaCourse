@@ -27,7 +27,7 @@ public abstract class Game {
 
     abstract void finish();
 
-    abstract void nextPlayerMove();
+    abstract void currentPlayerMove();
 
     public int getGameType() {
         return gameType;
@@ -37,4 +37,5 @@ public abstract class Game {
         this.gameType = gameType;
     }
 
+    public abstract void setNextPlayer();
 }

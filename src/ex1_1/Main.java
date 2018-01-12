@@ -15,7 +15,13 @@ public class Main {
         seaBattle.start();
 
         while (!seaBattle.isEnd()) {
-            seaBattle.nextPlayerMove();
+            seaBattle.currentPlayerMove();
+            seaBattle.setNextPlayer();
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
 
         seaBattle.finish();
