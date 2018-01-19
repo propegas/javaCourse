@@ -28,4 +28,8 @@ public class Cat {
     public void setSatiety(boolean satiety) {
         this.satiety = satiety;
     }
+
+    public void info() {
+        System.out.println("cat: " + name + " " + satiety);
+    }
 }

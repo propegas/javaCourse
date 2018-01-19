@@ -15,10 +15,14 @@ public class Plate {
         food = food - n;
     }
 
+    public void increaseFood(int n) {
+        food = food + n;
+    }
+
     public int getDiffFromPlate(int n) {
         int diff = food - n;
         if (diff < 0) {
-            return -diff;
+            return food;
         } else {
             return n;
         }
