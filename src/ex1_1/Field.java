@@ -75,4 +75,8 @@ public class Field {
         }
         return false;
     }
+
+    public int getShipsCount() {
+        return ships.getShipList().size();
+    }
 }

@@ -10,7 +10,6 @@ public class SeaBattle extends Game {
 
     public static final int TABLE_SIZE = 10;
     private static final int MAX_SHIP_SIZE = 4;
-    private static final int MAX_SHIPS_COUNT_BY_PLAYER = 6;
 
     private static SeaBattle currentGameInstance;
 

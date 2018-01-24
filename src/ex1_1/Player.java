@@ -12,11 +12,13 @@ public class Player {
     private String name;
     private short id;
     private boolean isComp;
+    private int maxShipsCount;
 
-    public Player(String name, short id, boolean isComp) {
+    public Player(String name, short id, boolean isComp, int maxShipsCount) {
         this.name = name;
         this.id = id;
         this.isComp = isComp;
+        this.maxShipsCount = maxShipsCount;
         this.field = new Field(TABLE_SIZE);
     }
 
@@ -57,6 +59,10 @@ public class Player {
     }
 
     public boolean isNotAllShipsCreated() {
-        return false;
+        return (field.getShipsCount() < maxShipsCount);
+    }
+
+    public int getMaxShipsCount() {
+        return maxShipsCount;
     }
 }
