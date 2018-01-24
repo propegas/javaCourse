@@ -10,6 +10,10 @@ import java.util.List;
 public class Ships {
     private List<Ship> shipList = new ArrayList<>();
 
+    public static Ship getRandomShip(int maxSize, int tableSize) {
+        return new Ship(maxSize, tableSize);
+    }
+
     public List<Ship> getShipList() {
         return shipList;
     }
@@ -35,10 +39,5 @@ public class Ships {
             }
         }
         return false;
-    }
-
-    public static Ship getRandomShip(int maxSize, int tableSize) {
-        Ship ship = new Ship(maxSize, tableSize);
-        return ship;
     }
 }
