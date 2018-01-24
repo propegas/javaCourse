@@ -4,34 +4,32 @@ package ex1_1;
  * Created by vgoryachev on 11.01.2018.
  * Package: ex1_1.
  */
-public class Coords {
+public class Coordinates {
 
-    private short x, y;
+    private int x, y;
 
-    public Coords(short x, short y) {
+    public Coordinates(int x, int y) {
         this.x = x;
         this.y = y;
     }
 
-    public short getX() {
+    public int getX() {
         return x;
     }
 
-    public void setX(short x) {
+    public void setX(int x) {
         this.x = x;
     }
 
-    public short getY() {
+    public int getY() {
         return y;
     }
 
-    public void setY(short y) {
+    public void setY(int y) {
         this.y = y;
     }
 
-    public boolean near(Coords o) {
-
-        Coords coords = (Coords) o;
+    public boolean isNear(final Coordinates coords) {
 
         if (x == coords.x + 1 || x == coords.x - 1) {
             return (y == coords.y || y == coords.y - 1 || y == coords.y + 1);
@@ -48,7 +46,7 @@ public class Coords {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        Coords coords = (Coords) o;
+        Coordinates coords = (Coordinates) o;
 
         if (x != coords.x) return false;
         return y == coords.y;
@@ -56,8 +54,8 @@ public class Coords {
 
     @Override
     public int hashCode() {
-        int result = (int) x;
-        result = 31 * result + (int) y;
+        int result = x;
+        result = 31 * result + y;
         return result;
     }
 }

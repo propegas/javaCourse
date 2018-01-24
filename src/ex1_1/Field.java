@@ -52,7 +52,7 @@ public class Field {
     public boolean addShip(Ship ship) {
         if (!ships.checkShipIntersection(ship) && !checkShipFieldMargin(ship)) {
             ships.addShip(ship);
-            for (Coords coord : ship.getShipCells()) {
+            for (Coordinates coord : ship.getShipCells()) {
                 cells[coord.getX()][coord.getY()] = LIVE_SHIP_CHAR;
             }
             return true;
@@ -60,16 +60,16 @@ public class Field {
         return false;
     }
 
-    public void addRandomShip(short maxShipSize, int tableSize) {
-        Ship ship = this.ships.getRandomShip(maxShipSize, tableSize);
+    public void addRandomShip(int maxShipSize, int tableSize) {
+        Ship ship = Ships.getRandomShip(maxShipSize, tableSize);
         addShip(ship);
     }
 
     private boolean checkShipFieldMargin(Ship ship) {
-        List<Coords> shipCells = ship.getShipCells();
-        for (Coords shipCoord : shipCells) {
+        List<Coordinates> shipCells = ship.getShipCells();
+        for (Coordinates shipCoord : shipCells) {
             if (shipCoord.getX() >= size || shipCoord.getY() >= size ||
-                    shipCoord.getX() < 0 || shipCoord.getY() < 0){
+                    shipCoord.getX() < 0 || shipCoord.getY() < 0) {
                 return true;
             }
         }

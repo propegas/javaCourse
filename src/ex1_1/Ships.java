@@ -7,7 +7,7 @@ import java.util.List;
  * Created by vgoryachev on 10.01.2018.
  * Package: ex1_1.
  */
-public class Ships implements ShipOperable {
+public class Ships {
     private List<Ship> shipList = new ArrayList<>();
 
     public List<Ship> getShipList() {
@@ -18,7 +18,6 @@ public class Ships implements ShipOperable {
         this.shipList = shipList;
     }
 
-    @Override
     public void addShip(Ship ship) {
 
         this.shipList.add(ship);
@@ -31,19 +30,14 @@ public class Ships implements ShipOperable {
                 continue;
             }
 
-            List<Coords> shipCells = ship.getShipCells();
-            for (Coords shipCoord : shipCells) {
-                for (Coords newShipCoord : newShip.getShipCells()) {
-                    if (shipCoord.equals(newShipCoord) || shipCoord.near(newShipCoord)) {
-                        return true;
-                    }
-                }
+            if (ship.isIntersectWith(newShip)) {
+                return true;
             }
         }
         return false;
     }
 
-    public Ship getRandomShip(short maxSize, int tableSize) {
+    public static Ship getRandomShip(int maxSize, int tableSize) {
         Ship ship = new Ship(maxSize, tableSize);
         return ship;
     }

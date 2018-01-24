@@ -10,59 +10,59 @@ import java.util.Random;
  */
 public class Ship {
     private static final short ALIVE = 0;
-    private short status;
-    private short size;
-    private Coords startCoord;
-    private Coords endCoord;
+    private int status;
+    private int size;
+    private Coordinates startCoord;
+    private Coordinates endCoord;
 
-    public Ship(short size, Coords startCoord, Coords endCoord) {
+    public Ship(int size, Coordinates startCoord, Coordinates endCoord) {
         this.size = size;
         this.startCoord = startCoord;
         this.endCoord = endCoord;
         this.status = ALIVE;
     }
 
-    public Ship(short maxShipSize, int tableSize) {
+    public Ship(int maxShipSize, int tableSize) {
         // default random
         Random random = new Random();
-        this.size = (short) (random.nextInt(maxShipSize) + 1);
+        this.size = random.nextInt(maxShipSize) + 1;
 
-        int type = random.nextInt(2);
+        boolean isHorizontal = random.nextBoolean();
         int x = random.nextInt(tableSize);
         int y = random.nextInt(tableSize);
-        startCoord = new Coords((short) x, (short) y);
-        if (type == 0) {
-            endCoord = new Coords((short) (x + size), (short) y);
+        startCoord = new Coordinates(x, y);
+        if (isHorizontal) {
+            endCoord = new Coordinates((x + size), y);
         } else {
-            endCoord = new Coords((short) x, (short) (y + size));
+            endCoord = new Coordinates(x, (y + size));
         }
     }
 
-    public short getSize() {
+    public int getSize() {
         return size;
     }
 
-    public void setSize(short size) {
+    public void setSize(int size) {
         this.size = size;
     }
 
-    public Coords getStartCoord() {
+    public Coordinates getStartCoord() {
         return startCoord;
     }
 
-    public void setStartCoord(Coords startCoord) {
+    public void setStartCoord(Coordinates startCoord) {
         this.startCoord = startCoord;
     }
 
-    public Coords getEndCoord() {
+    public Coordinates getEndCoord() {
         return endCoord;
     }
 
-    public void setEndCoord(Coords endCoord) {
+    public void setEndCoord(Coordinates endCoord) {
         this.endCoord = endCoord;
     }
 
-    public short getStatus() {
+    public int getStatus() {
         return status;
     }
 
@@ -70,11 +70,11 @@ public class Ship {
         this.status = status;
     }
 
-    public List<Coords> getShipCells() {
-        List<Coords> shipCoords = new ArrayList<>(size);
-        if (startCoord.getX() == endCoord.getX()) {
-            short minY, maxY;
-            if (startCoord.getY() < endCoord.getY()) {
+    public List<Coordinates> getShipCells() {
+        List<Coordinates> shipCoords = new ArrayList<>(size);
+        if (isHorizontal()) {
+            int minY, maxY;
+            if (isUpToDown()) {
                 minY = startCoord.getY();
                 maxY = endCoord.getY();
             } else {
@@ -82,13 +82,13 @@ public class Ship {
                 maxY = startCoord.getY();
             }
 
-            for (short i = minY; i < maxY; i++) {
-                shipCoords.add(new Coords(startCoord.getX(), i));
+            for (int i = minY; i < maxY; i++) {
+                shipCoords.add(new Coordinates(startCoord.getX(), i));
             }
 
-        } else if (startCoord.getY() == endCoord.getY()) {
-            short minX, maxX;
-            if (startCoord.getX() < endCoord.getX()) {
+        } else if (isVertical()) {
+            int minX, maxX;
+            if (isLeftToRight()) {
                 minX = startCoord.getX();
                 maxX = endCoord.getX();
             } else {
@@ -96,11 +96,39 @@ public class Ship {
                 maxX = startCoord.getX();
             }
 
-            for (short i = minX; i < maxX; i++) {
-                shipCoords.add(new Coords(i, startCoord.getY()));
+            for (int i = minX; i < maxX; i++) {
+                shipCoords.add(new Coordinates(i, startCoord.getY()));
             }
 
         }
         return shipCoords;
+    }
+
+    private boolean isLeftToRight() {
+        return startCoord.getX() < endCoord.getX();
+    }
+
+    private boolean isVertical() {
+        return startCoord.getY() == endCoord.getY();
+    }
+
+    private boolean isUpToDown() {
+        return startCoord.getY() < endCoord.getY();
+    }
+
+    private boolean isHorizontal() {
+        return startCoord.getX() == endCoord.getX();
+    }
+
+    public boolean isIntersectWith(Ship newShip) {
+        List<Coordinates> shipCells = this.getShipCells();
+        for (Coordinates shipCoord : shipCells) {
+            for (Coordinates newShipCoord : newShip.getShipCells()) {
+                if (shipCoord.equals(newShipCoord) || shipCoord.isNear(newShipCoord)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

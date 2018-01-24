@@ -11,7 +11,7 @@ public class Player {
     private Field field;
     private String name;
     private short id;
-    private boolean isComp = false;
+    private boolean isComp;
 
     public Player(String name, short id, boolean isComp) {
         this.name = name;
@@ -54,5 +54,9 @@ public class Player {
 
     public void setComp(boolean comp) {
         isComp = comp;
+    }
+
+    public boolean isNotAllShipsCreated() {
+        return false;
     }
 }
