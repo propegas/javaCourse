@@ -55,7 +55,7 @@ public class Player {
     }
 
     public void setComp(boolean comp) {
-        isComp = comp;
+        this.isComp = comp;
     }
 
     public boolean isNotAllShipsCreated() {

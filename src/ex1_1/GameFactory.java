@@ -11,7 +11,7 @@ public class GameFactory {
     public static final int USER_VS_USER = 1;
     public static final int COMP_VS_COMP = 2;
     public static final boolean AUTO_CREATE_SHIPS = true;
-    public static final int MAX_SHIPS_COUNT_BY_PLAYER = 6;
+    private static final int MAX_SHIPS_COUNT_BY_PLAYER = 6;
     private Game gameInstance;
 
     public GameFactory(int gameType, boolean autoCreateShips) {

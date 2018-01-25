@@ -29,6 +29,10 @@ public class Field {
         }
     }
 
+    public int getShipsCount() {
+        return getShips().getShipList().size();
+    }
+
     public Ships getShips() {
         return ships;
     }
@@ -76,7 +80,4 @@ public class Field {
         return false;
     }
 
-    public int getShipsCount() {
-        return ships.getShipList().size();
-    }
 }
